@@ -1,119 +1,59 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>CSV reader | Surya G</title>
+    <script src="app.js" defer></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
+    <script type="text/javascript" ></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+ 
 </head>
-<body>
-    <input type="file" name="inputfile"
-    id="inputfile"> 
-<br> 
-<h1>Columns Name are</h1>
-<pre id="output"></pre> 
+<body > 
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">CSV Reader v1.0- By Surya G </a>
+    </nav>
 
-<div id="table_div"></div>
-<div>
-<label>Enter Columns Name</label>
-<input type="text" id="colFilter">
-<button type="submit">Submit</button>
-</div>
-<script type="text/javascript"> 
-var data='';
-document.getElementById('inputfile') 
-    .addEventListener('change', function() { 
-      
-    var fr=new FileReader(); 
-    fr.onload=function(){ 
-        data = fr.result;
-        // console.log(data)
-        // document.getElementById('output').textContent=fr.result; 
-        bufferString = data
-        bufferString = bufferString.replace(/["]+/g, '');
-        var arr = bufferString.split('\n');     
-        var jsonObj = [];
-        var headers = arr[0].split(',');
-        for(var i = 1; i < arr.length; i++) {
-        var data = arr[i].split(',');
-        var obj = {};
-        for(var j = 0; j < data.length; j++) {
-            obj[headers[j].trim()] = data[j].trim();
-        }
-        jsonObj.push(obj);
-        }
-       b = jsonObj
-       console.log(b)
-       colName = Object.keys(b[0])
-       for(let item of colName){
-        document.getElementById('output').textContent += item + ' '
-       
-       }
-       manipulate(b)
-        return jsonObj
-    } 
-    fr.readAsText(this.files[0]); 
-}) 
-function manipulate(b)
-{
-
-columnsName = Object.keys(b[0])
-console.log(columnsName)
-     
-       start = 0
-       end = b.length
-filterRows = b.slice(start,end)
-let columnsSelector = ''
-for(let items of columnsName){
-columnsSelector += ','+ items
-}
-
-console.log(columnsSelector)
-
-columnsSelector = columnsSelector.replace(/^.{1}/g, '');
-columnsSelector = columnsSelector.replace(/[ , ]+/g, ',');
-// columnsSelector=abc
-columnsSelector=columnsSelector.split(',')
-
-data=[]
-for(let row of filterRows){
-for(let col of columnsSelector){
-data.push(row[col])
-}
-}
-
-console.log(data)
-
-var arr = data
-
-var newArr = [];
-newArr.push(columnsSelector)
-while(arr.length) newArr.push(arr.splice(0,columnsSelector.length));
-
-// return newArr
-
-google.charts.load('current', {'packages':['table']});
-google.charts.setOnLoadCallback(drawTable);
-
-function drawTable() {
-var data = google.visualization.arrayToDataTable(newArr);
-
-
-var table = new google.visualization.Table(document.getElementById('table_div'));
-
-table.draw(data, {showRowNumber: true, width: '100%', height: '100%',pageSize:'10'});
-}
-return 
-
-
-}
-
-</script> 
+    <div class="container">
+        <form class="change">
+            <div class="form-group">
+              <label for="exampleFormControlFile1">Load CSV file.</label>
+              <input type="file" class="form-control-file" name="receive-file" id="receive-file" accept=".csv">
+            </div>
+          </form>
+          <div id="table_div" class="original-table">
+        
+        </div>
+        <div>
+            
+                <form class="change" id="csv-manipulation"> 
+                        
+                    <div class="form-group">
+                      <label for="formGroupExampleInput" style="margin-bottom: 20px;">Filter By Column. </label>
+                      <input type="text" class="form-control" id="columnNames" placeholder=" Example :- Column Name 1, Col Name 2, Col Name 3..">
+                    </div>
+                    <div class="form-group">
+                      <label for="formGroupExampleInput2">Filter by Rows</label>
+                     <span><input type="text" class="form-control row" id="num1" min=0 placeholder="Start Row Number. Default : 0">:   <input type="text" id="num2" class="form-control row" id="formGroupExampleInput2">
+                     </span> 
+                    </div>
+                    <button type="button" class="btn btn-success" id="submitBtn">Submit</button>
+                    <a id="download-csv-format" class="btn btn-success" style="color:white;">
+                            Download As CSV
+                    </a>
+                    <blockquote class="blockquote text-left" style="margin-top:20px">
+                        <p class="mb-0"><i>All columns and rows values are taken by default if no values are given.</i></p>
+                        <footer class="blockquote-footer"><cite title="Source Title">Submit and Scroll down to view the newly generated table.</cite></footer>
+                      </blockquote>
+                  </form>
+             
+        </div>
+        <div id="new_table_div" class="original-table">
+        </div>
+    </div>
 </body>
+
 </html>
-
-
-

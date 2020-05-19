@@ -1,0 +1,110 @@
+<!DOCTYPE html> 
+<html> 
+  
+<head> 
+    <title>Read Text File</title> 
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+</head> 
+  
+<body> 
+    <input type="file" name="inputfile"
+            id="inputfile"> 
+    <br> 
+   <h1>Columns Name are</h1>
+    <pre id="output"></pre> 
+
+    <div id="table_div"></div>
+    <script type="text/javascript"> 
+  var data='';
+        document.getElementById('inputfile') 
+            .addEventListener('change', function() { 
+              
+            var fr=new FileReader(); 
+            fr.onload=function(){ 
+                data = fr.result;
+                // console.log(data)
+                // document.getElementById('output').textContent=fr.result; 
+                bufferString = data
+                bufferString = bufferString.replace(/["]+/g, '');
+                var arr = bufferString.split('\n');     
+                var jsonObj = [];
+                var headers = arr[0].split(',');
+                for(var i = 1; i < arr.length; i++) {
+                var data = arr[i].split(',');
+                var obj = {};
+                for(var j = 0; j < data.length; j++) {
+                    obj[headers[j].trim()] = data[j].trim();
+                }
+                jsonObj.push(obj);
+                }
+               b = jsonObj
+               console.log(b)
+               colName = Object.keys(b[0])
+               for(let item of colName){
+                document.getElementById('output').textContent += item + ' '
+               
+               }
+               manipulate(b)
+                return jsonObj
+            } 
+            fr.readAsText(this.files[0]); 
+        }) 
+function manipulate(b)
+{
+
+    columnsName = Object.keys(b[0])
+    console.log(columnsName)
+             
+               start = 0
+               end = b.length
+filterRows = b.slice(start,end)
+let columnsSelector = ''
+for(let items of columnsName){
+    columnsSelector += ','+ items
+}
+
+console.log(columnsSelector)
+
+columnsSelector = columnsSelector.replace(/^.{1}/g, '');
+columnsSelector = columnsSelector.replace(/[ , ]+/g, ',');
+// columnsSelector=abc
+columnsSelector=columnsSelector.split(',')
+
+data=[]
+for(let row of filterRows){
+  for(let col of columnsSelector){
+    data.push(row[col])
+  }
+}
+
+console.log(data)
+
+var arr = data
+
+var newArr = [];
+newArr.push(columnsSelector)
+while(arr.length) newArr.push(arr.splice(0,columnsSelector.length));
+
+// return newArr
+
+google.charts.load('current', {'packages':['table']});
+      google.charts.setOnLoadCallback(drawTable);
+
+      function drawTable() {
+        var data = google.visualization.arrayToDataTable(newArr);
+        
+
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+
+        table.draw(data, {showRowNumber: true, width: '100%', height: '100%',pageSize:'10'});
+      }
+return 
+
+
+}
+
+    </script> 
+</body> 
+  
+</html> 

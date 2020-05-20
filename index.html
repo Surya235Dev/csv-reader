@@ -4,17 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSV reader | Surya G</title>
-    <script src="app.js" defer></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
-    <script type="text/javascript" ></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
- 
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/multi-select.css">
+  
 </head>
 <body > 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">CSV Reader and Editor v1.05 - By Surya G </a>
+        <a class="navbar-brand" href="#">CSV Reader and Editor v2.0 - By Surya G </a>
     </nav>
 
     <div class="container">
@@ -31,15 +29,24 @@
         <div>
             
                 <form class="change" id="csv-manipulation"> 
+                  <div class="alert alert-dark"  style="margin-bottom:20px" role="alert">
+       
+                    <p class="mb-0"><i>All columns and rows values are taken by default if no values are given.</i></p>
+                    <footer class="blockquote-footer"><cite title="Source Title">Submit and Scroll down to view the newly generated table.</cite></footer>
+              
+                </div>
+               
                         
                     <div class="form-group">
-                      <label for="formGroupExampleInput" style="margin-bottom: 20px;">Filter By Column. </label>
-                      <input type="text" class="form-control" id="columnNames" >
-                  
+                      <label for="selection-option">Select the required columns to generate a new table.</label>
+                   
+                      <select id='selection-option'  multiple='multiple'>
+                      </select>
+             
                     </div>
                     <div class="form-group">
                       <label for="formGroupExampleInput2">Filter by Rows</label>
-                     <span><input type="text" class="form-control row" id="num1" min=0 placeholder="Start Row Number. Default : 0">:   <input type="text"  placeholder="End Row Number" id="num2" min=2 class="form-control row" id="formGroupExampleInput2">
+                     <span><input type="number" class="form-control row" id="num1" min=0 placeholder="Start Row Number. Default : 0">:   <input type="number"  id="num2" min=2 class="form-control row" id="formGroupExampleInput2">
                      </span> 
                     </div>
                     <button type="button" class="btn btn-success" id="submitBtn">Submit</button>
@@ -48,11 +55,9 @@
                     </a>
                     <button type="button" class="btn btn-danger" id="submitBtn" disabled>PDF Download(not completed)</button>
                     <button type="button" class="btn btn-danger" id="submitBtn" disabled>XLS Download(not completed)</button>
-                    
-                    <blockquote class="blockquote text-left" style="margin-top:20px">
-                        <p class="mb-0"><i>All columns and rows values are taken by default if no values are given.</i></p>
-                        <footer class="blockquote-footer"><cite title="Source Title">Submit and Scroll down to view the newly generated table.</cite></footer>
-                      </blockquote>
+                   
+                   
+                  
                   </form>
              
         </div>
@@ -60,5 +65,8 @@
         </div>
     </div>
 </body>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+<script src="assets/js/jquery.multi-select.js"></script>
+<script type="text/javascript" src="app.js"></script>
 </html>
+</script>

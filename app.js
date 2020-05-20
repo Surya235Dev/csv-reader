@@ -94,25 +94,55 @@ document.getElementById('receive-file').addEventListener('change',function(){
         google.charts.setOnLoadCallback(drawTable);
     
         function drawTable() {
+            var cssClassNames = {
+                'headerRow': 'italic-darkblue-font large-font bold-font header',
+                'tableRow': '',
+                'oddTableRow': 'beige-background',
+                'selectedTableRow': 'orange-background large-font',
+                'hoverTableRow': '',
+                'headerCell': 'gold-border',
+                'tableCell': 'datas',
+                'rowNumberCell': 'underline-blue-font'};
             var data = google.visualization.arrayToDataTable(newArr);
-    
+          
             var table = new google.visualization.Table(document.getElementById('table_div'));
             
             table.draw(data, {
                 showRowNumber: true,
+                page:'enable',
                 width: '100%',
                 height: '100%',
-                pageSize: '10'
+                pageSize: '15',
+                'allowHtml': true, 
+                'cssClassNames': cssClassNames,
+                pagingSymbols: {
+                    prev: '<button class="btn btn-success">Prev</button>',
+                    next: '<button class="btn btn-success">Next</button>'
+                },
+            
+                
             });
             document.getElementById('table_div').style.display='block';
             document.getElementById('csv-manipulation').style.display='block'
-        }
+            
+           
+          }
         document.getElementById("num2").placeholder = `End Row Number. Default : ${jsonData.length}`;
-        document.getElementById("columnNames").placeholder = `Type column names. Example : ${columnsSelector[0]}, ${columnsSelector[1]}, ${columnsSelector[2] ? `${columnsSelector[2]}` :'...'} ${columnsSelector[3] ? `,${columnsSelector[3]} ...` :''} `;
-        manipluate(jsonData)
        
-
-    }
+        
+        
+          let newInput = document.getElementById('selection-option')
+              let count = 0
+              for(let item of columnsSelector){
+                  let createOption = document.createElement('option')
+                  createOption.textContent = item
+                  createOption.setAttribute('value',`${count}`)
+                  newInput.append(createOption)
+                  count += 1
+              }
+              $('#selection-option').multiSelect();
+       manipluate(jsonData)
+      }
     
     fr.readAsText(this.files[0]);
 })
@@ -123,8 +153,14 @@ let manipluate = (csvData) => {
     submitBtn.addEventListener('click', () => {
         let startNum = document.getElementById('num1').value;
         let endNum = document.getElementById('num2').value;
-        let colFilter = document.getElementById('columnNames').value;
-        
+    
+        let newColumnSelector = []
+        let selectionItem = document.getElementById('selection-option');
+        for(let item of selectionItem){
+            if(item.hasAttribute('selected')){
+                    newColumnSelector.push(item.textContent)
+            }
+        }
 
         if (startNum == '' && endNum == '') {
             startNum = 0
@@ -137,40 +173,12 @@ let manipluate = (csvData) => {
             endNum = 1
         }
 
-        newColumnSelector = ''
-        
-        let firstColumn = Object.keys(csvData[0])
-
-        if (colFilter == '') {
-            for (let items of Object.keys(csvData[0])) {
-                newColumnSelector += ',' + items
-            }
-
-            newColumnSelector = newColumnSelector.replace(/\s/g,'')
-            newColumnSelector = newColumnSelector.replace(/^.{1}/g, '');
-        } else {
-            newColumnSelector = colFilter.replace(/\s/g,'');
-            newColumnSelector = newColumnSelector.replace(/[ , ]+/g, ',')
+        if(newColumnSelector.length===0){
+            newColumnSelector = Object.keys(csvData[0])
         }
-    
     
         newfilterRows = filterColData(csvData, startNum, endNum)
-        newColumnSelector = splitData(newColumnSelector,',')
-        
-        for(let item of newColumnSelector){
-            if(firstColumn.includes(item)){
-                flag = true
-                continue
-                
-            } else {
-                alert('Invalid Col name')
-                document.getElementById('columnNames').value = ''
-                flag=false
-            }
-        }
-        if(flag===false){
-            return 
-        }
+    
         let newArray = datacsvtoArray(newfilterRows,newColumnSelector)
     
         let newDataArray = arrayTo2d(newArray,newColumnSelector )
@@ -178,15 +186,34 @@ let manipluate = (csvData) => {
        google.charts.setOnLoadCallback(drawNewTable);
     
         function drawNewTable() {
+            var cssClassNames = {
+                'headerRow': 'italic-darkblue-font large-font bold-font header',
+                'tableRow': '',
+                'oddTableRow': 'beige-background',
+                'selectedTableRow': 'orange-background large-font',
+                'hoverTableRow': '',
+                'headerCell': 'gold-border',
+                'tableCell': 'datas',
+                'rowNumberCell': 'underline-blue-font'};
             var data = google.visualization.arrayToDataTable(newDataArray);
             var table = new google.visualization.Table(document.getElementById('new_table_div'));
-    
+            
             table.draw(data, {
                 showRowNumber: true,
+                page:'enable',
                 width: '100%',
                 height: '100%',
-                pageSize: '10'
-            });
+                pageSize: '15',
+                'allowHtml': true, 
+                'cssClassNames': cssClassNames,
+                pagingSymbols: {
+                    prev: '<button class="btn btn-success">Prev</button>',
+                    next: '<button class="btn btn-success">Next</button>'
+                }
+            
+                
+            })
+        
     
         }
         document.getElementById('new_table_div').style.display='block';

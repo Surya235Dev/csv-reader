@@ -18,6 +18,12 @@ let csvTojson = (csvData) => {
     return csvTojsonObj
 }
 
+let saveAsCSV = (data) => {
+    var download = document.getElementById('download-csv-format');
+    download.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(data));
+    download.setAttribute('download', 'new_csv_file.csv');
+}
+
 let arrayTo2d = (arrData, columns) => {
     let newArr = []
     newArr.push(columns);
@@ -102,7 +108,7 @@ document.getElementById('receive-file').addEventListener('change',function(){
             document.getElementById('csv-manipulation').style.display='block'
         }
         document.getElementById("num2").placeholder = `End Row Number. Default : ${jsonData.length}`;
-        
+        document.getElementById("columnNames").placeholder = `Type column names. Example : ${columnsSelector[0]}, ${columnsSelector[1]}, ${columnsSelector[2] ? `${columnsSelector[2]}` :'...'} ${columnsSelector[3] ? `,${columnsSelector[3]} ...` :''} `;
         manipluate(jsonData)
        
 
@@ -127,6 +133,8 @@ let manipluate = (csvData) => {
             startNum = 0
         } else if (endNum == '') {
             endNum = csvData.length
+        } else if(endNum == '0'){
+            endNum = 1
         }
 
         newColumnSelector = ''
@@ -141,8 +149,8 @@ let manipluate = (csvData) => {
             newColumnSelector = newColumnSelector.replace(/\s/g,'')
             newColumnSelector = newColumnSelector.replace(/^.{1}/g, '');
         } else {
-            newColumnSelector = colFilter.replace(/[ , ]+/g, ',');
-            newColumnSelector = newColumnSelector.replace(/\s/g,'')
+            newColumnSelector = colFilter.replace(/\s/g,'');
+            newColumnSelector = newColumnSelector.replace(/[ , ]+/g, ',')
         }
     
     
@@ -182,11 +190,8 @@ let manipluate = (csvData) => {
     
         }
         document.getElementById('new_table_div').style.display='block';
-   
-        let content = arrayToCSV(newDataArray)
-        
-        var download = document.getElementById('download-csv-format');
-        download.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(content));
-        download.setAttribute('download', 'new_csv_file.csv');
+        let toCSVfile = arrayToCSV(newDataArray)
+        saveAsCSV(toCSVfile)
+       
     });
 }

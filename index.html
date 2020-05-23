@@ -3,70 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSV reader | Surya G</title>
+    <title>CSV Reader | Surya G</title>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" type="text/css" href="assets/css/multi-select.css">
-  
-</head>
-<body > 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">CSV Reader and Editor v2.0 - By Surya G </a>
-    </nav>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+    
 
-    <div class="container">
-        <form class="change">
-            <div class="form-group">
-              <label for="exampleFormControlFile1">Load your CSV here.</label>
-              <input type="file" class="btn" name="receive-file" id="receive-file" accept=".csv">
+    
+<link rel="stylesheet" type="text/css" href="http://www.shieldui.com/shared/components/latest/css/light/all.min.css" />
+<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+<script type="text/javascript" src="http://www.shieldui.com/shared/components/latest/js/jszip.min.js"></script> 
+
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-dark bg-dark">
+            <span class="navbar-brand mb-0 h1">CSV Reader and Editor - Surya G</span>
+          </nav>
+    </header>
+    
+        <div class="container">
+            <div class="card">
+                <form>
+                    <form>
+                        <div class="form-group">
+                          <label for="exampleFormControlFile1">Upload CSV file</label>
+                          <input type="file" class="form-control-file" id="receive-csv-file" accept=".csv">
+                        </div>
+                      </form>
+                      </form>
             </div>
-               
-          </form>
-          <div id="table_div" class="original-table">
-          
-        </div>
-        <div>
-            
-                <form class="change" id="csv-manipulation"> 
-                  <div class="alert alert-dark"  style="margin-bottom:20px" role="alert">
-       
-                    <p class="mb-0"><i>All columns and rows values are taken by default if no values are given.</i></p>
-                    <footer class="blockquote-footer"><cite title="Source Title">Submit and Scroll down to view the newly generated table.</cite></footer>
-              
-                </div>
-               
+            <div class="card" id="tableDisplay">
+              <div id="table_div">
+              </div>
+            </div>
+            <div class="card">
+                <form>
+                 
+                      
+                      <div class="form-group">
+                      <div class="form-row">
+                        <div class="col-lg-3">
+                        <h5>Filter By Rows</h5>  
+                        </div> 
+                        <div class="col-lg-5">
+                         
+                          <input type="number" class="form-control" min=0 id="num1" placeholder="Start Row Number. Default : 0">
+                        </div>  
+                        <div class="col-lg-4">
+                            <div></div>
+                          <input type="number" class="form-control" min=1 id="num2" placeholder="End Row Number">
+                        </div>
+                      </div>
+                      </div>
+
+                      <div class="form-group">
                         
-                    <div class="form-group">
-                      <label for="selection-option">Select the required columns to generate a new table.</label>
-                   
-                      <select id='selection-option'  multiple='multiple'>
-                      </select>
-             
+                        <div class="form-row">
+                          <div class="col-lg-3">
+                            <h5>Filter By Column Name</h5>
+                          </div>
+                            <div class="col-lg-9">
+                             
+                                <select class="js-example-basic-multiple" id="multiple-select"  multiple="multiple"> </select></div>  
+                         
+                          </div>
+                      </div>
+
+                      <div class="form-row">
+                        <div class="col-lg-3">
+                          <h5>Filter by Data values</h5>
+                        </div>
+                        <div class="col-lg-9">
+                          <input type="text" class="form-control" id="dataFilter" placeholder="Search by data values. Example:- Red, Petrol, India ... ">
+                        </div>
+                      </div>
+
+                      <div class="alert alert-dark" role="alert">
+                        <p class="mb-0"><i>All columns and rows values are taken by default if no values are given.</i></p>
+                        <footer class="blockquote-footer"><cite title="Source Title">Submit and Scroll down to view the newly generated table.</cite></footer>
                     </div>
-                    <div class="form-group">
-                      <label for="formGroupExampleInput2">Filter by Rows</label>
-                     <span><input type="number" class="form-control row" id="num1" min=0 placeholder="Start Row Number. Default : 0">:   <input type="number"  id="num2" min=2 class="form-control row" id="formGroupExampleInput2">
-                     </span> 
-                    </div>
-                    <button type="button" class="btn btn-success" id="submitBtn">Submit</button>
-                    <a id="download-csv-format" class="btn btn-success" style="color:white;">
-                            Download As CSV
-                    </a>
-                    <button type="button" class="btn btn-danger" id="submitBtn" disabled>PDF Download(not completed)</button>
-                    <button type="button" class="btn btn-danger" id="submitBtn" disabled>XLS Download(not completed)</button>
+                       <div class="buttons">
+                        <button type="button" class="btn btn-success" id="generateNewTable">Submit</button>
+                        <button type="button" class="btn btn-success" id="clearBtn">Clear Values</button>
+                        <a id="download-csv-format" class="btn btn-danger text-white">Download as CSV</a>
+                        <button type="button" class="btn btn-danger" id="pdfDownload">Download as PDF (Beta)</button>
+                        <a id="download-xls-format" class="btn btn-danger text-white">Download as XLS (Beta)</a>
+                       </div>
+                     
+                </form>
+               
                    
-                   
-                  
-                  </form>
-             
+            </div>
+            <div class="card" id="tableDisplay1">
+              <div id="table_div_new">
+              </div>
+            </div>
+   
         </div>
-        <div id="new_table_div" class="original-table">
-        </div>
-    </div>
+   
+  <table id="surya">
+    
+  </table>
+      
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
-<script src="assets/js/jquery.multi-select.js"></script>
-<script type="text/javascript" src="app.js"></script>
+<script>
+    $(document).ready(function() {
+      
+    $('.js-example-basic-multiple').select2({
+      placeholder: " Select here to add columns"
+    });
+  });
+
+
+  
+  </script>
+  <script src="script.js" ></script>
 </html>
-</script>
